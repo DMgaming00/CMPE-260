@@ -39,7 +39,9 @@ def read_csv(path: Path) -> list[dict]:
 
 # --------------------------------------------------------------------- data plots
 def fig_baselines(summary: list[dict], out: Path) -> None:
-    datasets = ['Cora', 'CiteSeer', 'PubMed']
+    # Plot only the datasets present, so results from `run_experiments.py --quick` also work.
+    present = {r['dataset'] for r in summary}
+    datasets = [d for d in ['Cora', 'CiteSeer', 'PubMed'] if d in present]
     fig, ax = plt.subplots(figsize=(8.2, 3.8))
     width = 0.16
     for i, m in enumerate(MODEL_ORDER):
