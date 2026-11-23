@@ -1,80 +1,93 @@
 # Graph Neural Networks for Semi-Supervised Node Classification
 
-**CMPE 260 literature survey and tutorial**, by Kalhar Patel, Dev Mulchandani, Deep Dhaduk and Nikita Memane, San Jose State University
+**A literature survey, lecture, and reproducible PyTorch baseline**
 
-Repository: <https://github.com/DMgaming00/CMPE-260/tree/main/Project%203>
+CMPE 260 · San Jose State University
+Kalhar Patel · Dev Mulchandani · Deep Dhaduk · Nikita Memane
 
-This project surveys ten peer-reviewed papers on graph neural networks (GNNs) for semi-supervised node classification. The papers are GCN, GraphSAGE, GAT, GIN, SGC, APPNP, over-smoothing theory, GraphSAINT, the Open Graph Benchmark, and Geom-GCN. The project also provides a reproducible PyTorch Geometric implementation of the baseline algorithm, the two-layer **Graph Convolutional Network** of Kipf & Welling (ICLR 2017).
+![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![PyTorch](https://img.shields.io/badge/PyTorch-2.x-ee4c2c) ![PyG](https://img.shields.io/badge/PyTorch%20Geometric-2.5%2B-3c2179) ![Tests](https://img.shields.io/badge/tests-13%20passing-brightgreen)
 
-| Deliverable | Location |
+---
+
+## At a glance
+
+| | |
 |---|---|
-| Survey paper, IEEE two-column (IEEEtran LaTeX, ~9,000 words, 10 surveyed papers + 6 supporting refs) | [`report/ieee/GNN_Survey_IEEE.tex`](report/ieee/GNN_Survey_IEEE.tex) (compile on Overleaf or locally, see below) |
-| Same report as an editable Word document | [`report/GNN_Literature_Survey.docx`](report/GNN_Literature_Survey.docx) (source of both: [`report/survey.md`](report/survey.md)) |
-| Lecture slides (62 slides, editable PowerPoint) | [`presentation/GNN_Lecture_60_Slides.pptx`](presentation/GNN_Lecture_60_Slides.pptx) |
-| Baseline code (PyTorch + PyTorch Geometric) | [`code/`](code/) |
-| Experiment outputs used in the report/slides | [`results/`](results/) |
-| Figures used in the report | [`figures/`](figures/) |
+| **Topic** | How graph neural networks use edges to classify nodes when only a few nodes are labeled, and when they fail |
+| **Surveyed papers** | 10 refereed papers (ICLR, NeurIPS, ICML, 2017–2020), plus 6 supporting references |
+| **Baseline** | Two-layer Graph Convolutional Network (Kipf & Welling, ICLR 2017) in PyTorch Geometric |
+| **Controls** | MLP without edges, SGC, APPNP, and GAT, all trained under the same protocol |
+| **Evaluation** | Cora / CiteSeer / PubMed, public Planetoid split, 10 seeds per model, plus a depth sweep |
+| **Headline** | Our GCN reaches **81.9 ± 0.8 %** on Cora (the paper reports 81.5 %); removing edges drops accuracy to 58.2 %; a plain GCN collapses at 8+ layers |
 
-## Repository structure
+## Deliverables
 
-```
-.
-├── README.md                     this file
-├── report/
-│   ├── survey.md                 single source of the report (Markdown + LaTeX math)
-│   ├── ieee/GNN_Survey_IEEE.tex  IEEE two-column paper (IEEEtran) + ieee/figures/
-│   ├── GNN_Literature_Survey.docx   Word version
-│   ├── make_ieee.py              survey.md -> IEEEtran LaTeX
-│   ├── reference.docx            Word styles used by pandoc
-│   └── build_report.sh           rebuilds both the .tex and the .docx
-├── presentation/
-│   ├── GNN_Lecture_60_Slides.pptx   lecture deck (original .pptx)
-│   └── build_deck.js             regenerates the deck from ../results (pptxgenjs)
-├── code/
-│   ├── models.py                 GCN (baseline) + MLP, SGC, APPNP, GAT controls
-│   ├── train.py                  training / validation selection / single test evaluation
-│   ├── evaluate.py               reload a checkpoint: per-split metrics, confusion matrix, node predictions
-│   ├── run_experiments.py        10-seed study of all models + GCN depth sweep
-│   ├── dataset_stats.py          dataset statistics and edge homophily
-│   ├── make_figures.py           regenerates every figure in ../figures
-│   ├── tests/test_smoke.py       offline unit/smoke tests (synthetic graph)
-│   └── requirements.txt
-├── results/                      committed copies of the outputs quoted in report and slides
-│   ├── summary.csv / summary.json / depth.csv / runs.csv   (run_experiments.py)
-│   ├── dataset_stats.json                                  (dataset_stats.py)
-│   └── gcn_cora_seed42/{metrics.json,history.csv}          (train.py, seed 42)
-├── figures/                      PNG figures embedded in the report
-└── archive/v1/                   first version of the report, deck and code (kept for reference)
-```
-
-## Baseline algorithm
-
-The two-layer GCN computes
-
-```
-Z = softmax( S · ReLU( S · X · W0 ) · W1 ),   S = D̃^(-1/2) (A + I) D̃^(-1/2)
-```
-
-and is trained with cross-entropy on the labeled training nodes only. The implementation follows the published Planetoid settings: 16 hidden units, dropout 0.5, Adam, learning rate 0.01, weight decay 5e-4, and 200 epochs. The checkpoint with the best **validation** accuracy is kept, with ties broken by lower validation loss. The **test** mask is evaluated once, after that checkpoint is restored.
-
-To make the survey's methodological claims measurable, the same script also trains four controls under an identical protocol:
-
-| `--model` | Model | Purpose |
+| Deliverable | File | Notes |
 |---|---|---|
-| `gcn` | Two-layer GCN [Kipf & Welling 2017] | **baseline** |
-| `mlp` | Two-layer MLP, no edges | measures the value of the graph |
-| `sgc` | SGC, K=2 [Wu et al. 2019] | is the nonlinearity necessary? |
-| `appnp` | APPNP, K=10, α=0.1 [Klicpera et al. 2019] | decoupled long-range propagation |
-| `gat` | 2-layer GAT, 8 heads [Veličković et al. 2018] | learned neighbor weights |
+| 📄 **Survey paper, IEEE two-column** | [`report/ieee/GNN_Survey_IEEE.tex`](report/ieee/GNN_Survey_IEEE.tex) · [Overleaf zip](report/GNN_Survey_IEEE_overleaf.zip) | IEEEtran; ~9,000 words; 13 equations, 5 figures, 5 tables |
+| 📝 Survey, Word version | [`report/GNN_Literature_Survey.docx`](report/GNN_Literature_Survey.docx) | Same text, native Word equations |
+| 🎓 **Lecture slides (62)** | [`presentation/GNN_Lecture_60_Slides.pptx`](presentation/GNN_Lecture_60_Slides.pptx) | Editable PowerPoint with speaker notes; open in PowerPoint (Keynote leaves the charts blank) |
+| 💻 **Baseline code** | [`code/`](code/) | GCN plus controls, evaluation, experiments, tests |
+| 📊 Results | [`results/`](results/) | Raw per-run CSV and summaries quoted in the paper and slides |
+| 🖼️ Figures | [`figures/`](figures/) | Regenerated by `code/make_figures.py` |
 
-## Prerequisites
+## Results
 
-* Python **3.10 or newer** (tested with 3.11)
-* pip, and about 1 GB of disk for PyTorch
-* Internet access on the first run: PyTorch Geometric downloads the Planetoid files (a few MB) from GitHub
-* A GPU is **not** required; everything below runs on a laptop CPU
+All numbers below come from `code/run_experiments.py` (see [`results/summary.csv`](results/summary.csv)). Test accuracy (%), mean ± std over 10 seeds:
 
-## Installation
+| Model | Cora | CiteSeer | PubMed | Original paper (public split) |
+|---|---|---|---|---|
+| MLP (no edges) | 58.2 ± 0.8 | 56.7 ± 1.6 | 72.5 ± 0.9 | — |
+| SGC | 80.8 ± 0.6 | 72.2 ± 0.0 | 78.8 ± 0.0 | 81.0 / 71.9 / 78.9 |
+| **GCN (baseline)** | **81.9 ± 0.8** | **70.9 ± 1.2** | **79.2 ± 0.3** | **81.5 / 70.3 / 79.0** |
+| APPNP | 83.5 ± 0.5 | 71.4 ± 0.5 | 80.0 ± 0.4 | different protocol |
+| GAT | 82.6 ± 1.1 | 72.1 ± 0.7 | 77.5 ± 0.4 | 83.0 / 72.5 / 79.0 |
+
+<p align="center">
+  <img src="figures/fig_baselines.png" width="80%" alt="Bar chart: test accuracy of MLP, SGC, GCN, APPNP and GAT on Cora, CiteSeer and PubMed">
+</p>
+
+**What the numbers show**
+
+* **The graph does most of the work.** Using edges adds 23.7, 14.3 and 6.7 points over the MLP. These graphs are strongly homophilous: 74–81 % of edges join same-class papers.
+* **The baseline reproduces the paper.** Our GCN gets 81.9 / 70.9 / 79.2; Kipf & Welling report 81.5 / 70.3 / 79.0.
+* **Nonlinearity adds little here.** SGC, a linear model on pre-smoothed features, is within 1.3 points of the GCN and trains 10–13× faster in our runs.
+* **Fancier models give small, inconsistent gains.** Only APPNP beats the GCN on all three datasets. GAT, run with one configuration for every dataset, falls below the GCN on PubMed.
+* **Depth hurts.** Accuracy peaks at 2 layers (81.9 %), drops to 74.4 % at 4, and collapses to about 30 % at 8 or more layers. That is below the 31.9 % you get by always predicting the most common class (over-smoothing, see Oono & Suzuki).
+
+<p align="center">
+  <img src="figures/fig_depth.png" width="55%" alt="Line chart: GCN test accuracy versus number of layers, collapsing beyond 4 layers">
+</p>
+
+These results come from one public split with published hyperparameters and no per-dataset tuning, so they demonstrate the methods and are not a leaderboard. Section XV of the paper discusses the limitations.
+
+## How the baseline works
+
+```mermaid
+flowchart LR
+    A[Planetoid graph<br/>features X, edges E] --> B[Row-normalize X]
+    B --> C["GCN layer 1<br/>S·X·W0 → ReLU"]
+    C --> D[Dropout 0.5]
+    D --> E["GCN layer 2<br/>S·H·W1 → logits"]
+    E --> F[Cross-entropy on<br/>140 training nodes]
+    F -->|Adam| C
+    E --> G{Best validation<br/>accuracy?}
+    G -->|keep checkpoint| H[Evaluate test set once]
+```
+
+The model is `Z = softmax( S · ReLU( S · X · W0 ) · W1 )` with `S = D̃^(-1/2) (A + I) D̃^(-1/2)`. It uses 16 hidden units, dropout 0.5, Adam with learning rate 0.01, weight decay 5e-4, and 200 epochs. The checkpoint with the best **validation** accuracy is kept (ties go to the lower validation loss), and the **test** set is scored exactly once, after training.
+
+| `--model` | What it is | Question it answers |
+|---|---|---|
+| `gcn` | Two-layer GCN (Kipf & Welling, 2017) | **baseline** |
+| `mlp` | Two-layer MLP, edges ignored | How much do edges help? |
+| `sgc` | SGC, K = 2 (Wu et al., 2019) | Is the nonlinearity needed? |
+| `appnp` | APPNP, K = 10, α = 0.1 (Klicpera et al., 2019) | Does long-range diffusion help? |
+| `gat` | GAT, 8 heads (Veličković et al., 2018) | Do learned neighbor weights help? |
+
+## Quick start
+
+**Requirements:** Python 3.10+ (tested on 3.11). Internet access is needed once, to download the datasets (a few MB). No GPU needed.
 
 ```bash
 cd code
@@ -82,104 +95,110 @@ python -m venv .venv
 source .venv/bin/activate            # Windows PowerShell: .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-```
 
-For a CUDA build of PyTorch, first install the wheel that matches your driver from <https://pytorch.org/get-started/locally/>, then run the `pip install -r requirements.txt` line. Tested versions: torch 2.15.0, torch-geometric 2.8.1, numpy 2.4.6, scipy 1.17.1 (macOS, CPU).
-
-## Usage
-
-All commands are run from `code/` with the virtual environment active.
-
-**1. Offline sanity check (≈5 s, no download)**
-
-```bash
-python -m pytest -q tests
-```
-
-Expected output: `13 passed`.
-
-**2. Train the GCN baseline**
-
-```bash
+python -m pytest -q tests            # 13 offline tests, ~5 s
 python train.py --dataset Cora --seed 42
 ```
 
-On the first run this downloads Cora into `code/data/`. It logs progress every 20 epochs and writes `results/metrics.json`, `results/history.csv` and `results/best_model.pt`. Reference output on our machine: best epoch 151, validation accuracy 0.798, **test accuracy 0.815**, about 5 s on CPU (see [`results/gcn_cora_seed42/metrics.json`](results/gcn_cora_seed42/metrics.json)). Other hardware or library versions may differ slightly.
+Expected output (CPU, ~5 s): the best epoch is 151, validation accuracy 0.798, and **test accuracy 0.815**. Compare with [`results/gcn_cora_seed42/metrics.json`](results/gcn_cora_seed42/metrics.json). Other hardware or library versions may shift this slightly.
 
-Other datasets and models:
+For a CUDA GPU, install the matching PyTorch wheel from <https://pytorch.org/get-started/locally/> first, then install `requirements.txt`. Tested versions: torch 2.15.0, torch-geometric 2.8.1, numpy 2.4.6, scipy 1.17.1.
+
+## Usage
+
+All commands run from `code/` with the virtual environment active.
 
 ```bash
-python train.py --dataset CiteSeer --output-dir results_citeseer
-python train.py --dataset PubMed   --output-dir results_pubmed
-python train.py --model gat   --dataset Cora --output-dir results_gat
-python train.py --model sgc   --dataset Cora --output-dir results_sgc
-python train.py --num-layers 8 --dataset Cora --output-dir results_gcn8   # deeper plain GCN
+# Train any model on any dataset
+python train.py --model gcn --dataset CiteSeer --output-dir results_citeseer
+python train.py --model gat --dataset Cora     --output-dir results_gat
+python train.py --num-layers 8 --dataset Cora  --output-dir results_gcn8   # deep plain GCN
 python train.py --help                                                    # all options
-```
 
-**3. Inference / evaluation demo**
-
-```bash
+# Inference: reload a checkpoint, print metrics, the confusion matrix and per-node predictions
 python evaluate.py --checkpoint results/best_model.pt --nodes 0 1 1708
-```
 
-This prints accuracy and macro-F1 on the train, validation and test splits, per-class test accuracy, the test confusion matrix, and the predicted class and confidence for the listed node ids.
-
-**4. Reproduce every table and figure**
-
-```bash
-python dataset_stats.py              # Table I    -> results/dataset_stats.json
-python run_experiments.py            # Tables IV-V -> results/experiments/  (~35 min on a laptop CPU)
-python run_experiments.py --quick    # 2 seeds, Cora only: ~1 min sanity check
+# Reproduce every table and figure in the paper
+python dataset_stats.py                 # dataset table
+python run_experiments.py               # 5 models × 3 datasets × 10 seeds + depth sweep (~35 min, CPU)
+python run_experiments.py --quick       # 2 seeds, Cora only (~1 min sanity check)
 python train.py --dataset Cora --seed 42 --output-dir results/gcn_cora_seed42
 python make_figures.py --results results/experiments --history results/gcn_cora_seed42/history.csv
 ```
 
-`make_figures.py` writes to `../figures/`. The committed `results/` folder at the repository root holds the outputs of exactly these commands, and the report and slides quote them.
-
-**5. Rebuild the report and slides (optional)**
-
-```bash
-cd report && ./build_report.sh                                       # needs pandoc; writes ieee/*.tex and the .docx
-cd presentation && npm install pptxgenjs@3.12.0 && node build_deck.js   # needs Node.js
-```
+Each training run writes `metrics.json` (accuracy, macro-F1, best epoch, time, library versions, full config), `history.csv` (per-epoch curves), and `best_model.pt` into its `--output-dir`.
 
 ## Compiling the IEEE paper
 
-`report/ieee/` is self-contained: it holds `GNN_Survey_IEEE.tex` and the `figures/` it uses.
+* **Overleaf:** *New Project → Upload Project →* select [`report/GNN_Survey_IEEE_overleaf.zip`](report/GNN_Survey_IEEE_overleaf.zip), then compile with pdfLaTeX. IEEEtran is built in.
+* **Local TeX Live / MacTeX:** `cd report/ieee && pdflatex GNN_Survey_IEEE.tex && pdflatex GNN_Survey_IEEE.tex`. Run it twice so cross-references resolve.
 
-* **Overleaf:** zip the `report/ieee` folder, choose *New Project → Upload Project*, and compile with pdfLaTeX. IEEEtran is built in.
-* **Local TeX Live / MacTeX:** `cd report/ieee && pdflatex GNN_Survey_IEEE.tex && pdflatex GNN_Survey_IEEE.tex` (run twice so references resolve).
+The paper, the Word version and the zip are all generated from one source, [`report/survey.md`](report/survey.md). After editing it, run `cd report && ./build_report.sh` (needs pandoc ≥ 3). To rebuild the slides from the result files: `cd presentation && npm install pptxgenjs@3.12.0 && node build_deck.js`.
 
-## Results (this project, 10 seeds, public Planetoid split)
+## Repository structure
 
-| Model | Cora | CiteSeer | PubMed |
-|---|---|---|---|
-| MLP (no edges) | 58.2 ± 0.8 | 56.7 ± 1.6 | 72.5 ± 0.9 |
-| SGC | 80.8 ± 0.6 | 72.2 ± 0.0 | 78.8 ± 0.0 |
-| **GCN (baseline)** | 81.9 ± 0.8 | 70.9 ± 1.2 | 79.2 ± 0.3 |
-| APPNP | 83.5 ± 0.5 | 71.4 ± 0.5 | 80.0 ± 0.4 |
-| GAT | 82.6 ± 1.1 | 72.1 ± 0.7 | 77.5 ± 0.4 |
+```
+Project 3/
+├── README.md
+├── report/
+│   ├── survey.md                     single source of the paper (Markdown + LaTeX math)
+│   ├── ieee/GNN_Survey_IEEE.tex      IEEE two-column paper  (+ ieee/figures/)
+│   ├── GNN_Survey_IEEE_overleaf.zip  upload-ready Overleaf project
+│   ├── GNN_Literature_Survey.docx    Word version
+│   ├── make_ieee.py                  survey.md → IEEEtran LaTeX
+│   ├── build_report.sh               rebuilds .tex, .docx and the zip
+│   └── reference.docx                Word styles used by pandoc
+├── presentation/
+│   ├── GNN_Lecture_60_Slides.pptx    62-slide lecture deck
+│   └── build_deck.js                 regenerates the deck from ../results
+├── code/
+│   ├── models.py                     GCN (baseline), MLP, SGC, APPNP, GAT
+│   ├── train.py                      training, validation-based selection, single test evaluation
+│   ├── evaluate.py                   checkpoint reload, metrics, confusion matrix, node predictions
+│   ├── run_experiments.py            multi-seed study + depth sweep
+│   ├── dataset_stats.py              dataset statistics and edge homophily
+│   ├── make_figures.py               all report figures
+│   ├── tests/test_smoke.py           offline tests (synthetic graph)
+│   └── requirements.txt
+├── results/                          outputs quoted in the paper and slides
+├── figures/                          figures used in the paper
+└── archive/v1/                       first draft of report, deck and code (kept for reference)
+```
 
-The full discussion is in Section XV of the report. For comparison, the original GCN paper reports 81.5 / 70.3 / 79.0.
+## Surveyed papers
+
+| # | Paper | Venue |
+|---|---|---|
+| 1 | Kipf & Welling, *Semi-Supervised Classification with Graph Convolutional Networks* | ICLR 2017 |
+| 2 | Hamilton, Ying & Leskovec, *Inductive Representation Learning on Large Graphs* (GraphSAGE) | NeurIPS 2017 |
+| 3 | Veličković et al., *Graph Attention Networks* | ICLR 2018 |
+| 4 | Xu, Hu, Leskovec & Jegelka, *How Powerful are Graph Neural Networks?* (GIN) | ICLR 2019 |
+| 5 | Wu et al., *Simplifying Graph Convolutional Networks* (SGC) | ICML 2019 |
+| 6 | Klicpera, Bojchevski & Günnemann, *Predict then Propagate* (APPNP) | ICLR 2019 |
+| 7 | Oono & Suzuki, *Graph Neural Networks Exponentially Lose Expressive Power for Node Classification* | ICLR 2020 |
+| 8 | Zeng et al., *GraphSAINT: Graph Sampling Based Inductive Learning Method* | ICLR 2020 |
+| 9 | Hu et al., *Open Graph Benchmark* | NeurIPS 2020 |
+| 10 | Pei et al., *Geom-GCN: Geometric Graph Convolutional Networks* | ICLR 2020 |
+
+Full IEEE-style references, including the six supporting ones, are at the end of the paper.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
-| `ModuleNotFoundError: No module named 'scipy'` while loading Planetoid | `pip install -r requirements.txt` (scipy is required to read the raw dataset files) |
-| Download fails or hangs on first run | Needs network access to `github.com/kimiyoung/planetoid`; or copy an existing `data/<Dataset>/` folder into `code/data/` |
-| `RuntimeError` about a corrupt or partial dataset | Delete `code/data/<Dataset>` and rerun |
+| `No module named 'scipy'` while loading the dataset | `pip install -r requirements.txt` (PyG needs scipy to read the raw Planetoid files) |
+| Download fails on first run | Needs access to `github.com/kimiyoung/planetoid`; or copy an existing `data/<Dataset>/` folder into `code/data/` |
+| Error about a corrupt or partial dataset | Delete `code/data/<Dataset>` and rerun |
 | `--device cuda requested but CUDA is not available` | Use `--device cpu` or install a CUDA build of PyTorch |
-| `No module named torch_geometric` | Make sure the virtual environment is active (`which python`) |
-| Slightly different numbers from ours | Expected across hardware and library versions; compare means over seeds |
+| `No module named torch_geometric` | Activate the virtual environment (`which python` should point into `.venv`) |
+| Numbers differ slightly from ours | Expected across hardware and library versions; compare means over seeds |
 
 ## Scope and honesty notes
 
-* Every number labelled "this project" comes from the scripts above. Numbers attributed to papers were checked against the papers.
-* The experiments are transductive, use a single public split, and use published hyperparameters without tuning. They demonstrate the baseline and the survey's controls; they are not a benchmark ranking.
-* GraphSAGE, GIN, GraphSAINT and Geom-GCN are surveyed but not implemented, because their defining settings (inductive, graph classification, very large or heterophilous graphs) differ from Planetoid.
+* Every number labelled "this project" was produced by the scripts above. Every number credited to a paper was checked against that paper.
+* The experiments are transductive: all node features and edges are visible during training, but test labels never are. They use one public split per dataset with published hyperparameters.
+* GraphSAGE, GIN, GraphSAINT and Geom-GCN are surveyed but not implemented. Their defining settings (inductive learning, graph classification, very large graphs, heterophilous graphs) differ from Planetoid.
 
-## Credits
+## Acknowledgments
 
-Algorithms: Kipf & Welling (GCN), Wu et al. (SGC), Klicpera et al. (APPNP), Veličković et al. (GAT). Framework: PyTorch and PyTorch Geometric (Fey & Lenssen, 2019). Datasets: Planetoid splits (Yang et al., ICML 2016) of Cora/CiteSeer/PubMed (Sen et al., AI Magazine 2008). Full references are in the report.
+Algorithms by Kipf & Welling (GCN), Wu et al. (SGC), Klicpera et al. (APPNP) and Veličković et al. (GAT). Built with [PyTorch](https://pytorch.org) and [PyTorch Geometric](https://pyg.org) (Fey & Lenssen, 2019). Datasets: Cora, CiteSeer and PubMed (Sen et al., *AI Magazine* 2008) with the Planetoid splits (Yang et al., ICML 2016).
