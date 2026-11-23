@@ -1,0 +1,9 @@
+# Tested with Python 3.11, torch 2.15.0, torch-geometric 2.8.1, numpy 2.4.6,
+# scipy 1.17.1, matplotlib 3.11 (CPU, macOS). For a CUDA build of PyTorch, install
+# torch first from https://pytorch.org/get-started/locally/ and then this file.
+torch>=2.2,<3.0
+torch-geometric>=2.5,<3.0
+numpy>=1.26,<3.0
+scipy>=1.10        # required by PyG to read the raw Planetoid pickle files
+matplotlib>=3.7    # only for make_figures.py
+pytest>=7.0        # only for the offline smoke tests

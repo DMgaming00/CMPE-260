@@ -1,0 +1,44 @@
+[
+  {
+    "dataset": "Cora",
+    "nodes": 2708,
+    "undirected_edges": 5278,
+    "features": 1433,
+    "classes": 7,
+    "train": 140,
+    "val": 500,
+    "test": 1000,
+    "label_rate": 0.0517,
+    "edge_homophily": 0.81,
+    "undirected": true,
+    "self_loops": false
+  },
+  {
+    "dataset": "CiteSeer",
+    "nodes": 3327,
+    "undirected_edges": 4552,
+    "features": 3703,
+    "classes": 6,
+    "train": 120,
+    "val": 500,
+    "test": 1000,
+    "label_rate": 0.0361,
+    "edge_homophily": 0.736,
+    "undirected": true,
+    "self_loops": false
+  },
+  {
+    "dataset": "PubMed",
+    "nodes": 19717,
+    "undirected_edges": 44324,
+    "features": 500,
+    "classes": 3,
+    "train": 60,
+    "val": 500,
+    "test": 1000,
+    "label_rate": 0.003,
+    "edge_homophily": 0.802,
+    "undirected": true,
+    "self_loops": false
+  }
+]

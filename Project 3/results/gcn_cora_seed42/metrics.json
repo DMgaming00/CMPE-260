@@ -1,0 +1,40 @@
+{
+  "model": "gcn",
+  "dataset": "Cora",
+  "seed": 42,
+  "device": "cpu",
+  "best_epoch": 151,
+  "validation_accuracy": 0.7979999780654907,
+  "test_accuracy": 0.8149999976158142,
+  "test_macro_f1": 0.8029102335015443,
+  "epochs_run": 200,
+  "train_seconds": 5.465,
+  "num_nodes": 2708,
+  "num_directed_edges": 10556,
+  "parameters": 23063,
+  "protocol": "Planetoid public split; checkpoint chosen on validation; test evaluated once",
+  "versions": {
+    "python": "3.11.14",
+    "torch": "2.15.0",
+    "torch_geometric": "2.8.1"
+  },
+  "config": {
+    "model": "gcn",
+    "dataset": "Cora",
+    "data_dir": "data",
+    "output_dir": "../results/gcn_cora_seed42",
+    "epochs": 200,
+    "patience": 100,
+    "hidden": 16,
+    "dropout": 0.5,
+    "lr": 0.01,
+    "weight_decay": 0.0005,
+    "num_layers": 2,
+    "K": null,
+    "alpha": 0.1,
+    "heads": 8,
+    "seed": 42,
+    "device": "auto",
+    "log_every": 20
+  }
+}
