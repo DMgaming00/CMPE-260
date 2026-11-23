@@ -24,7 +24,8 @@ Kalhar Patel · Dev Mulchandani · Deep Dhaduk · Nikita Memane
 
 | Deliverable | File | Notes |
 |---|---|---|
-| 📄 **Survey paper, IEEE two-column** | [`report/ieee/GNN_Survey_IEEE.tex`](report/ieee/GNN_Survey_IEEE.tex) · [Overleaf zip](report/GNN_Survey_IEEE_overleaf.zip) | IEEEtran; ~9,000 words; 13 equations, 5 figures, 5 tables |
+| 📄 **Survey paper, IEEE two-column (PDF)** | [`report/GNN_Survey_IEEE.pdf`](report/GNN_Survey_IEEE.pdf) | 13 pages, IEEEtran; ~9,000 words; 13 equations, 5 figures, 5 tables |
+| LaTeX source of the paper | [`report/ieee/GNN_Survey_IEEE.tex`](report/ieee/GNN_Survey_IEEE.tex) · [Overleaf zip](report/GNN_Survey_IEEE_overleaf.zip) | Compiles with pdfLaTeX (TeX Live / Overleaf) |
 | 📝 Survey, Word version | [`report/GNN_Literature_Survey.docx`](report/GNN_Literature_Survey.docx) | Same text, native Word equations |
 | 🎓 **Lecture slides (62)** | [`presentation/GNN_Lecture_60_Slides.pptx`](presentation/GNN_Lecture_60_Slides.pptx) | Editable PowerPoint with speaker notes; open in PowerPoint (Keynote leaves the charts blank) |
 | 💻 **Baseline code** | [`code/`](code/) | GCN plus controls, evaluation, experiments, tests |
@@ -130,6 +131,8 @@ Each training run writes `metrics.json` (accuracy, macro-F1, best epoch, time, l
 
 ## Compiling the IEEE paper
 
+The compiled PDF is already included ([`report/GNN_Survey_IEEE.pdf`](report/GNN_Survey_IEEE.pdf)). To rebuild it from source:
+
 * **Overleaf:** *New Project → Upload Project →* select [`report/GNN_Survey_IEEE_overleaf.zip`](report/GNN_Survey_IEEE_overleaf.zip), then compile with pdfLaTeX. IEEEtran is built in.
 * **Local TeX Live / MacTeX:** `cd report/ieee && pdflatex GNN_Survey_IEEE.tex && pdflatex GNN_Survey_IEEE.tex`. Run it twice so cross-references resolve.
 
@@ -142,6 +145,7 @@ Project 3/
 ├── report/
 │   ├── survey.md                     paper source text (Markdown + LaTeX math)
 │   ├── ieee/GNN_Survey_IEEE.tex      IEEE two-column paper  (+ ieee/figures/)
+│   ├── GNN_Survey_IEEE.pdf           compiled IEEE paper (13 pages)
 │   ├── GNN_Survey_IEEE_overleaf.zip  upload-ready Overleaf project
 │   └── GNN_Literature_Survey.docx    Word version
 ├── presentation/

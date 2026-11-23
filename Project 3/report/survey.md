@@ -61,7 +61,7 @@ The graph convolutional network of Kipf and Welling [1] is the natural starting 
 
 $$S = \tilde D^{-1/2}\tilde A\,\tilde D^{-1/2}, \qquad H^{(\ell+1)} = \sigma\big(S\,H^{(\ell)}\,W^{(\ell)}\big), \qquad H^{(0)} = X. \tag{4}$$
 
-Entry-wise, node $v$ receives $\sum_{u\in\mathcal{N}(v)\cup\{v\}} \frac{1}{\sqrt{\tilde d_u \tilde d_v}}\,W^{(\ell)\top} h_u^{(\ell)}$. The symmetric normalization keeps a hub from dominating simply because it has many neighbors, and the self-loop retains each node's own features. The two-layer classifier used throughout the literature, and in our code, is
+Entry-wise, node $v$ receives the transformed features of each neighbor $u$, including itself, weighted by $1/\sqrt{\tilde d_u \tilde d_v}$. The symmetric normalization keeps a hub from dominating simply because it has many neighbors, and the self-loop retains each node's own features. The two-layer classifier used throughout the literature, and in our code, is
 
 $$Z = \operatorname{softmax}\Big(S\ \mathrm{ReLU}\big(S X W^{(0)}\big)\, W^{(1)}\Big), \tag{5}$$
 
