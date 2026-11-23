@@ -29,7 +29,7 @@ Kalhar Patel · Dev Mulchandani · Deep Dhaduk · Nikita Memane
 | 📄 **Survey paper, IEEE two-column (PDF)** | [`report/GNN_Survey_IEEE.pdf`](report/GNN_Survey_IEEE.pdf) | IEEEtran, 13 pages; ~8,000 words of prose (~8,700 with tables and captions); 13 numbered equations, 5 figures, 5 tables |
 | LaTeX source of the paper | [`report/ieee/GNN_Survey_IEEE.tex`](report/ieee/GNN_Survey_IEEE.tex) · [Overleaf zip](report/GNN_Survey_IEEE_overleaf.zip) | Compiles with pdfLaTeX (TeX Live / Overleaf) |
 | 📝 Survey, Word version | [`report/GNN_Literature_Survey.docx`](report/GNN_Literature_Survey.docx) | Same text, native Word equations |
-| 🎓 **Lecture slides (62)** | [`presentation/GNN_Lecture_60_Slides.pptx`](presentation/GNN_Lecture_60_Slides.pptx) | Editable PowerPoint with speaker notes; open in PowerPoint (Keynote leaves the charts blank) |
+| 🎓 **Lecture slides (PDF)** | [`presentation/GNN_Survey_Slides.pdf`](presentation/GNN_Survey_Slides.pdf) | 62 slides: equations, diagrams, results and the baseline walkthrough. The editable PowerPoint version is submitted separately on Canvas |
 | 💻 **Baseline code** | [`code/`](code/) | GCN plus controls, evaluation, experiments, tests |
 | 📊 Results | [`results/`](results/) | Raw per-run CSV and summaries quoted in the paper and slides |
 | 🖼️ Figures | [`figures/`](figures/) | Produced by `code/make_figures.py` |
@@ -151,7 +151,7 @@ Project 3/
 │   ├── GNN_Survey_IEEE_overleaf.zip  upload-ready Overleaf project
 │   └── GNN_Literature_Survey.docx    Word version
 ├── presentation/
-│   └── GNN_Lecture_60_Slides.pptx    62-slide lecture deck
+│   └── GNN_Survey_Slides.pdf         62-slide lecture deck (PDF)
 ├── code/
 │   ├── models.py                     GCN (baseline), MLP, SGC, APPNP, GAT
 │   ├── train.py                      training, validation-based selection, single test evaluation
