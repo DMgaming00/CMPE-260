@@ -133,7 +133,6 @@ Each training run writes `metrics.json` (accuracy, macro-F1, best epoch, time, l
 * **Overleaf:** *New Project → Upload Project →* select [`report/GNN_Survey_IEEE_overleaf.zip`](report/GNN_Survey_IEEE_overleaf.zip), then compile with pdfLaTeX. IEEEtran is built in.
 * **Local TeX Live / MacTeX:** `cd report/ieee && pdflatex GNN_Survey_IEEE.tex && pdflatex GNN_Survey_IEEE.tex`. Run it twice so cross-references resolve.
 
-The paper, the Word version and the zip are all generated from one source, [`report/survey.md`](report/survey.md). After editing it, run `cd report && ./build_report.sh` (needs pandoc ≥ 3). To rebuild the slides from the result files: `cd presentation && npm install pptxgenjs@3.12.0 && node build_deck.js`.
 
 ## Repository structure
 
@@ -141,16 +140,12 @@ The paper, the Word version and the zip are all generated from one source, [`rep
 Project 3/
 ├── README.md
 ├── report/
-│   ├── survey.md                     single source of the paper (Markdown + LaTeX math)
+│   ├── survey.md                     paper source text (Markdown + LaTeX math)
 │   ├── ieee/GNN_Survey_IEEE.tex      IEEE two-column paper  (+ ieee/figures/)
 │   ├── GNN_Survey_IEEE_overleaf.zip  upload-ready Overleaf project
-│   ├── GNN_Literature_Survey.docx    Word version
-│   ├── make_ieee.py                  survey.md → IEEEtran LaTeX
-│   ├── build_report.sh               rebuilds .tex, .docx and the zip
-│   └── reference.docx                Word styles used by pandoc
+│   └── GNN_Literature_Survey.docx    Word version
 ├── presentation/
-│   ├── GNN_Lecture_60_Slides.pptx    62-slide lecture deck
-│   └── build_deck.js                 regenerates the deck from ../results
+│   └── GNN_Lecture_60_Slides.pptx    62-slide lecture deck
 ├── code/
 │   ├── models.py                     GCN (baseline), MLP, SGC, APPNP, GAT
 │   ├── train.py                      training, validation-based selection, single test evaluation
@@ -161,8 +156,7 @@ Project 3/
 │   ├── tests/test_smoke.py           offline tests (synthetic graph)
 │   └── requirements.txt
 ├── results/                          outputs quoted in the paper and slides
-├── figures/                          figures used in the paper
-└── archive/v1/                       first draft of report, deck and code (kept for reference)
+└── figures/                          figures used in the paper
 ```
 
 ## Surveyed papers
